@@ -51,19 +51,29 @@ function addScrollAnimations() {
 
 // إعداد مستمعي الأحداث
 function setupEventListeners() {
-    // أزرار النسخ
-    document.querySelectorAll('.copy-btn').forEach(btn => {
+    // أزرار النسخ المنفصلة
+    document.querySelectorAll('.copy-btn-single').forEach(btn => {
         btn.addEventListener('click', function() {
             const targetId = this.getAttribute('data-target');
+            const dataType = this.getAttribute('data-type');
             const text = document.getElementById(targetId).textContent;
-            copyToClipboard(text);
-            showToast('تم نسخ النص بنجاح', 'success');
             
-            // تأثير على الزر
-            this.classList.add('btn-success');
-            setTimeout(() => {
-                this.classList.remove('btn-success');
-            }, 1000);
+            if (text && text !== '-') {
+                copyToClipboard(text);
+                showToast(`تم نسخ ${dataType} بنجاح`, 'success');
+                
+                // تأثير على الزر
+                this.classList.add('copied');
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-1"></i>تم النسخ';
+                
+                setTimeout(() => {
+                    this.classList.remove('copied');
+                    this.innerHTML = originalText;
+                }, 2000);
+            } else {
+                showToast('لا توجد بيانات للنسخ', 'warning');
+            }
         });
     });
     
@@ -202,10 +212,14 @@ function copyAllData() {
     
     // تأثير على الزر
     const btn = document.getElementById('copyAllBtn');
-    btn.classList.add('btn-success');
+    btn.classList.add('copied');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check me-2"></i>تم النسخ';
+    
     setTimeout(() => {
-        btn.classList.remove('btn-success');
-    }, 1000);
+        btn.classList.remove('copied');
+        btn.innerHTML = originalText;
+    }, 2000);
 }
 
 // حفظ البيانات كصورة (بدون أي إضافات)
@@ -213,7 +227,7 @@ function saveDataAsImage() {
     if (!currentStudentData) return;
     
     // إخفاء جميع العناصر غير المرغوب فيها مؤقتًا
-    const elementsToHide = document.querySelectorAll('.card-header, .card-footer, .result-link-btn, #saveAsImageBtn, #copyAllBtn, #newSearchBtn, .copy-btn');
+    const elementsToHide = document.querySelectorAll('.card-header, .card-footer, .result-link-btn, #saveAsImageBtn, #copyAllBtn, #newSearchBtn, .copy-btn-single');
     const originalDisplays = [];
     
     elementsToHide.forEach(el => {
@@ -254,17 +268,21 @@ function saveDataAsImage() {
             
             <div style="display: flex; margin-bottom: 15px; align-items: center;">
                 <div style="color: #4cc9f0; font-weight: bold; width: 150px;">اسم المستخدم:</div>
-                <div style="font-size: 18px;">${currentStudentData.username || 'غير محدد'}</div>
+                <div style="font-size: 18px; font-family: 'Courier New', monospace; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
+                    ${currentStudentData.username || 'غير محدد'}
+                </div>
             </div>
             
             <div style="display: flex; margin-bottom: 15px; align-items: center;">
                 <div style="color: #4cc9f0; font-weight: bold; width: 150px;">كلمة المرور:</div>
-                <div style="font-size: 18px;">${currentStudentData.password || 'غير محدد'}</div>
+                <div style="font-size: 18px; font-family: 'Courier New', monospace; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
+                    ${currentStudentData.password || 'غير محدد'}
+                </div>
             </div>
         </div>
         
         <div style="text-align: center; margin-top: 30px; color: #888; font-size: 14px;">
-            نظام بيانات الطلاب - كلية الطب البيطري جامعة المنيا  
+            نظام بيانات الطلاب - كلية الطب البيطري - جامعة المنيا
         </div>
     `;
     
@@ -286,10 +304,14 @@ function saveDataAsImage() {
         
         // تأثير على الزر
         const btn = document.getElementById('saveAsImageBtn');
-        btn.classList.add('btn-success');
+        btn.classList.add('copied');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check me-2"></i>تم الحفظ';
+        
         setTimeout(() => {
-            btn.classList.remove('btn-success');
-        }, 1000);
+            btn.classList.remove('copied');
+            btn.innerHTML = originalText;
+        }, 2000);
         
     }).catch(error => {
         console.error('خطأ في حفظ الصورة:', error);
@@ -347,7 +369,8 @@ function handleAdminLogin() {
         localStorage.setItem('adminLoginTime', new Date().getTime());
         
         // تأثير نجاح
-        document.getElementById('adminLoginBtn').classList.add('btn-success');
+        document.getElementById('adminLoginBtn').classList.add('copied');
+        document.getElementById('adminLoginBtn').innerHTML = '<i class="fas fa-check me-2"></i>تم الدخول';
         
         setTimeout(() => {
             // إغلاق النافذة
@@ -368,6 +391,16 @@ function handleAdminLogin() {
             document.getElementById('adminPassword').classList.remove('shake');
         }, 500);
     }
+}
+
+// نسخ النص إلى الحافظة
+function copyToClipboard(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
 }
 
 // عرض رسالة منبثقة
@@ -401,5 +434,4 @@ function showToast(message, type = 'info') {
     toast.addEventListener('hidden.bs.toast', function() {
         toastContainer.remove();
     });
-
 }
