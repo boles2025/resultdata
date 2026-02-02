@@ -264,7 +264,7 @@ function saveDataAsImage() {
         </div>
         
         <div style="text-align: center; margin-top: 30px; color: #888; font-size: 14px;">
-            نظام بيانات الطلاب - كلية تكنولوجيا المعلومات
+            نظام بيانات الطلاب - كلية الطب البيطري جامعة المنيا  
         </div>
     `;
     
@@ -401,4 +401,5 @@ function showToast(message, type = 'info') {
     toast.addEventListener('hidden.bs.toast', function() {
         toastContainer.remove();
     });
+
 }
