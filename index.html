@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام بيانات الطلاب - كلية الطب البيطري جامعة المنيا</title>
+    <title>نظام بيانات الطلاب - كلية الطب البيطري - جامعة المنيا</title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -23,28 +23,7 @@
     <div class="background-animation"></div>
 
     <!-- شريط التنقل -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-graduation-cap"></i>
-                نظام بيانات الطلاب
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">
-                            <i class="fas fa-home me-1"></i> الرئيسية
-                        </a>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    
     <!-- النموذج الرئيسي -->
     <div class="container mt-5">
         <!-- شعار -->
@@ -55,7 +34,7 @@
             <h1 class="display-5 fw-bold mb-3" style="background: linear-gradient(45deg, #4361ee, #4cc9f0); -webkit-background-clip: text; background-clip: text; color: transparent;">
                 نظام بيانات الطلاب
             </h1>
-            <p class="lead text-light mb-4">كلية الطب البيطري -  جامعة المنيا</p>
+            <p class="lead text-light mb-4">كلية الطب البيطري - جامعة المنيا</p>
             <div class="credit-badge">
                 <i class="fas fa-crown"></i>
                 تصميم/ مهندس بولس سمير - مدير وحدة تكنولوجيا المعلومات
@@ -141,10 +120,12 @@
                                     اسم المستخدم:
                                 </div>
                                 <div class="data-value">
-                                    <span id="studentUsername">-</span>
-                                    
-                                       
-                                    </button>
+                                    <div class="d-flex align-items-center justify-content-between w-100">
+                                        <span id="studentUsername" class="text-value">-</span>
+                                        <button class="btn copy-btn-single" data-target="studentUsername" data-type="اسم المستخدم">
+                                            <i class="fas fa-copy me-1"></i>نسخ
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -154,16 +135,28 @@
                                     كلمة المرور:
                                 </div>
                                 <div class="data-value">
-                                    <span id="studentPassword">-</span>
-                                    
-                                        
-                                    </button>
+                                    <div class="d-flex align-items-center justify-content-between w-100">
+                                        <span id="studentPassword" class="text-value">-</span>
+                                        <button class="btn copy-btn-single" data-target="studentPassword" data-type="كلمة المرور">
+                                            <i class="fas fa-copy me-1"></i>نسخ
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- أزرار الإجراءات -->
-                        <div class="row mt-4">
+                        
+<!-- رابط النتيجة -->
+                        <div class="text-center mt-4">
+                            <a href="http://credit.minia.edu.eg/static/index.html" 
+                               target="_blank" 
+                               class="result-link-btn">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                للدخول إلى موقع النتيجة اضغط هنا
+                            </a>
+                        </div>
+<div class="row mt-4">
                             <div class="col-md-6 mb-3">
                                 <button class="btn glass-btn w-100" id="copyAllBtn">
                                     <i class="fas fa-copy me-2"></i>نسخ جميع البيانات
@@ -176,15 +169,7 @@
                             </div>
                         </div>
 
-                        <!-- رابط النتيجة -->
-                        <div class="text-center mt-4">
-                            <a href="http://credit.minia.edu.eg/static/index.html" 
-                               target="_blank" 
-                               class="result-link-btn">
-                                <i class="fas fa-external-link-alt me-2"></i>
-                                للدخول إلى موقع النتيجة اضغط هنا
-                            </a>
-                        </div>
+                        
                     </div>
                     <div class="card-footer bg-transparent border-top border-light border-opacity-10">
                         <button class="btn glass-btn glass-btn-outline w-100" id="newSearchBtn">
@@ -220,32 +205,7 @@
     </div>
 
     <!-- نافذة الدخول للإدارة -->
-    <div class="modal fade" id="adminLoginModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content glass-card border-0">
-                <div class="modal-header glass-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-user-shield me-2"></i>دخول المدير
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-4">
-                        <label for="adminPassword" class="form-label text-light">كلمة مرور المدير</label>
-                        <input type="password" class="form-control glass-input" id="adminPassword" placeholder="أدخل كلمة المرور">
-                    </div>
-                    <div class="alert alert-danger bg-danger bg-opacity-25 border-danger border-opacity-50 text-light d-none" id="adminLoginError">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        كلمة المرور غير صحيحة. الرجاء المحاولة مرة أخرى.
-                    </div>
-                </div>
-                <div class="modal-footer bg-transparent">
-                    <button type="button" class="btn glass-btn glass-btn-outline" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn glass-btn" id="adminLoginBtn">دخول</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- تذييل الصفحة -->
     <footer class="footer mt-5">
@@ -256,7 +216,7 @@
                 <i class="fas fa-user-tie me-2"></i>مدير الوحدة: مهندس بولس سمير
             </p>
             <p class="text-light mt-2 opacity-75">
-                &copy; <span id="currentYear"></span> كلية الطب البيطري جامعة المنيا . جميع الحقوق محفوظة.
+                &copy; <span id="currentYear"></span> كلية الطب البيطري - جامعة المنيا. جميع الحقوق محفوظة.
             </p>
         </div>
     </footer>
