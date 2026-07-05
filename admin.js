@@ -153,7 +153,7 @@ function showSection(sectionId) {
         section.style.display = 'block';
         
         // إضافة تأثير ظهور
-        section.classList.add('animate__fadeIn');
+        section.classList.add('fade-in-up');
     }
 }
 
@@ -213,8 +213,8 @@ function addStudentToTable(index, nationalId, student) {
         <td>${nationalId}</td>
         <td>${student.name || ''}</td>
         <td>${student.group || ''}</td>
-        <td>${student.username || ''}</td>
-        <td>${student.password || ''}</td>
+        <td dir="ltr">${student.username || ''}</td>
+        <td dir="ltr">${student.password || ''}</td>
         <td>
             <button class="btn btn-sm btn-danger delete-student-btn" data-id="${nationalId}">
                 <i class="fas fa-trash"></i>
@@ -346,9 +346,9 @@ function processExcelData(data, uploadProgress, progressBar) {
     // تخطي الصف الأول (العناوين)
     const rows = data.slice(1);
     const totalRows = rows.length;
-    let processedRows = 0;
     let successCount = 0;
     let errorCount = 0;
+    const promises = [];
     
     // معالجة كل صف
     rows.forEach((row, index) => {
@@ -362,10 +362,9 @@ function processExcelData(data, uploadProgress, progressBar) {
             
             // التحقق من صحة الرقم القومي
             if (nationalId && nationalId.length === 14 && /^\d+$/.test(nationalId)) {
-                // حفظ الطالب في قاعدة البيانات
                 const studentRef = database.ref('students/' + nationalId);
                 
-                studentRef.set({
+                const promise = studentRef.set({
                     name: name,
                     group: group,
                     username: username,
@@ -378,6 +377,7 @@ function processExcelData(data, uploadProgress, progressBar) {
                     console.error(`خطأ في حفظ الصف ${index + 1}:`, error);
                     errorCount++;
                 });
+                promises.push(promise);
             } else {
                 errorCount++;
             }
@@ -386,38 +386,37 @@ function processExcelData(data, uploadProgress, progressBar) {
         }
         
         // تحديث شريط التقدم
-        processedRows++;
-        const progress = Math.round((processedRows / totalRows) * 100);
+        const progress = Math.round(((index + 1) / totalRows) * 100);
         progressBar.style.width = `${progress}%`;
         progressBar.textContent = `${progress}%`;
-        
-        // عند اكتمال المعالجة
-        if (processedRows === totalRows) {
-            setTimeout(() => {
-                uploadProgress.style.display = 'none';
-                
-                // تحديث إحصائيات الطلاب
-                updateStudentCount();
-                
-                // إعادة تحميل البيانات
-                loadStudentsData();
-                
-                // عرض النتائج
-                let message = `تم معالجة ${totalRows} صف`;
-                if (successCount > 0) {
-                    message += `، تم إضافة ${successCount} طالب بنجاح`;
-                }
-                if (errorCount > 0) {
-                    message += `، فشل ${errorCount}`;
-                }
-                
-                showAdminToast(message, successCount > 0 ? 'success' : 'warning');
-                
-                // إخفاء قسم الرفع
-                hideSection('uploadSection');
-                document.getElementById('excelFile').value = '';
-            }, 500);
-        }
+    });
+    
+    // انتظار اكتمال جميع عمليات الحفظ
+    Promise.all(promises).then(() => {
+        setTimeout(() => {
+            uploadProgress.style.display = 'none';
+            
+            // تحديث إحصائيات الطلاب
+            updateStudentCount();
+            
+            // إعادة تحميل البيانات
+            loadStudentsData();
+            
+            // عرض النتائج
+            let message = `تم معالجة ${totalRows} صف`;
+            if (successCount > 0) {
+                message += `، تم إضافة ${successCount} طالب بنجاح`;
+            }
+            if (errorCount > 0) {
+                message += `، فشل ${errorCount}`;
+            }
+            
+            showAdminToast(message, successCount > 0 ? 'success' : 'warning');
+            
+            // إخفاء قسم الرفع
+            hideSection('uploadSection');
+            document.getElementById('excelFile').value = '';
+        }, 500);
     });
 }
 

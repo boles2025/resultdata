@@ -3,9 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // تعيين السنة الحالية في التذييل
     document.getElementById('currentYear').textContent = new Date().getFullYear();
     
-    // تهيئة متغيرات
-    let currentStudentData = null;
-    
     // إعداد أحداث النقر
     setupEventListeners();
     
@@ -13,12 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const studentForm = document.getElementById('studentForm');
     studentForm.addEventListener('submit', handleStudentSearch);
     
-    // إعداد رابط الدخول للإدارة
-    document.getElementById('adminLink').addEventListener('click', showAdminLogin);
-    document.getElementById('adminAccessLink').addEventListener('click', showAdminLogin);
-    
-    // إعداد نموذج الدخول للإدارة
-    document.getElementById('adminLoginBtn').addEventListener('click', handleAdminLogin);
+    // إعداد دخول الإدارة
+    const adminAccessLink = document.getElementById('adminAccessLink');
+    if (adminAccessLink) adminAccessLink.addEventListener('click', showAdminLogin);
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    if (adminLoginBtn) adminLoginBtn.addEventListener('click', handleAdminLogin);
     
     // إعداد الزر للبحث الجديد
     document.getElementById('newSearchBtn').addEventListener('click', resetSearch);
@@ -77,11 +73,6 @@ function setupEventListeners() {
         });
     });
     
-    // زر نسخ جميع البيانات
-    document.getElementById('copyAllBtn').addEventListener('click', copyAllData);
-    
-    // زر حفظ كصورة
-    document.getElementById('saveAsImageBtn').addEventListener('click', saveDataAsImage);
 }
 
 // البحث عن بيانات الطالب
@@ -201,130 +192,28 @@ function incrementLoginStats() {
     });
 }
 
-// نسخ جميع البيانات
-function copyAllData() {
-    if (!currentStudentData) return;
-    
-    const text = `اسم الطالب: ${currentStudentData.name}\nالفرقة: ${currentStudentData.group}\nاسم المستخدم: ${currentStudentData.username}\nكلمة المرور: ${currentStudentData.password}`;
-    
-    copyToClipboard(text);
-    showToast('تم نسخ جميع البيانات بنجاح', 'success');
-    
-    // تأثير على الزر
-    const btn = document.getElementById('copyAllBtn');
-    btn.classList.add('copied');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-check me-2"></i>تم النسخ';
-    
-    setTimeout(() => {
-        btn.classList.remove('copied');
-        btn.innerHTML = originalText;
-    }, 2000);
+// عرض نافذة الدخول للإدارة
+function showAdminLogin(e) {
+    e.preventDefault();
+    const modal = document.getElementById('adminLoginModal');
+    if (!modal) return;
+    new bootstrap.Modal(modal).show();
+    document.getElementById('adminPassword').value = '';
+    document.getElementById('adminLoginError').classList.add('d-none');
 }
 
-// حفظ البيانات كصورة (بدون أي إضافات)
-function saveDataAsImage() {
-    if (!currentStudentData) return;
-    
-    // إخفاء جميع العناصر غير المرغوب فيها مؤقتًا
-    const elementsToHide = document.querySelectorAll('.card-header, .card-footer, .result-link-btn, #saveAsImageBtn, #copyAllBtn, #newSearchBtn, .copy-btn-single');
-    const originalDisplays = [];
-    
-    elementsToHide.forEach(el => {
-        originalDisplays.push(el.style.display);
-        el.style.display = 'none';
-    });
-    
-    // إنشاء عنصر مؤقت لعرض البيانات فقط
-    const tempContainer = document.createElement('div');
-    tempContainer.style.cssText = `
-        position: fixed;
-        left: -10000px;
-        top: -10000px;
-        width: 600px;
-        padding: 40px;
-        background: linear-gradient(135deg, #1a1a2e, #16213e);
-        border-radius: 20px;
-        color: white;
-        font-family: 'Cairo', sans-serif;
-    `;
-    
-    tempContainer.innerHTML = `
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="color: #4cc9f0; margin-bottom: 10px;">بيانات الطالب</h2>
-            <div style="height: 2px; background: linear-gradient(90deg, transparent, #4361ee, transparent); margin: 20px 0;"></div>
-        </div>
-        
-        <div style="margin-bottom: 25px;">
-            <div style="display: flex; margin-bottom: 15px; align-items: center;">
-                <div style="color: #4cc9f0; font-weight: bold; width: 150px;">الاسم:</div>
-                <div style="font-size: 18px;">${currentStudentData.name || 'غير محدد'}</div>
-            </div>
-            
-            <div style="display: flex; margin-bottom: 15px; align-items: center;">
-                <div style="color: #4cc9f0; font-weight: bold; width: 150px;">الفرقة:</div>
-                <div style="font-size: 18px;">${currentStudentData.group || 'غير محدد'}</div>
-            </div>
-            
-            <div style="display: flex; margin-bottom: 15px; align-items: center;">
-                <div style="color: #4cc9f0; font-weight: bold; width: 150px;">اسم المستخدم:</div>
-                <div style="font-size: 18px; font-family: 'Courier New', monospace; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
-                    ${currentStudentData.username || 'غير محدد'}
-                </div>
-            </div>
-            
-            <div style="display: flex; margin-bottom: 15px; align-items: center;">
-                <div style="color: #4cc9f0; font-weight: bold; width: 150px;">كلمة المرور:</div>
-                <div style="font-size: 18px; font-family: 'Courier New', monospace; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);">
-                    ${currentStudentData.password || 'غير محدد'}
-                </div>
-            </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 30px; color: #888; font-size: 14px;">
-            نظام بيانات الطلاب - كلية الطب البيطري - جامعة المنيا
-        </div>
-    `;
-    
-    document.body.appendChild(tempContainer);
-    
-    // التقاط الصورة
-    html2canvas(tempContainer, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true
-    }).then(canvas => {
-        // إنشاء رابط للتنزيل
-        const link = document.createElement('a');
-        link.download = `بيانات_الطالب_${currentStudentData.name || 'غير_معروف'}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        
-        showToast('تم حفظ البيانات كصورة بنجاح', 'success');
-        
-        // تأثير على الزر
-        const btn = document.getElementById('saveAsImageBtn');
-        btn.classList.add('copied');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check me-2"></i>تم الحفظ';
-        
-        setTimeout(() => {
-            btn.classList.remove('copied');
-            btn.innerHTML = originalText;
-        }, 2000);
-        
-    }).catch(error => {
-        console.error('خطأ في حفظ الصورة:', error);
-        showToast('حدث خطأ أثناء حفظ الصورة', 'error');
-    }).finally(() => {
-        // إزالة العنصر المؤقت
-        document.body.removeChild(tempContainer);
-        
-        // إعادة عرض العناصر المخفية
-        elementsToHide.forEach((el, index) => {
-            el.style.display = originalDisplays[index];
-        });
-    });
+// التعامل مع دخول المدير
+function handleAdminLogin() {
+    const password = document.getElementById('adminPassword').value;
+    if (password === '85208520') {
+        localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('adminLoginTime', new Date().getTime());
+        const modal = bootstrap.Modal.getInstance(document.getElementById('adminLoginModal'));
+        if (modal) modal.hide();
+        window.location.href = 'admin.html';
+    } else {
+        document.getElementById('adminLoginError').classList.remove('d-none');
+    }
 }
 
 // إعادة تعيين البحث
@@ -338,59 +227,6 @@ function resetSearch() {
     
     // التركيز على حقل الإدخال
     document.getElementById('nationalId').focus();
-}
-
-// عرض نافذة الدخول للإدارة
-function showAdminLogin(e) {
-    e.preventDefault();
-    
-    const adminLoginModal = new bootstrap.Modal(document.getElementById('adminLoginModal'));
-    adminLoginModal.show();
-    
-    // تفريغ حقل كلمة المرور
-    document.getElementById('adminPassword').value = '';
-    document.getElementById('adminLoginError').classList.add('d-none');
-    
-    // تأثير ظهور النافذة
-    setTimeout(() => {
-        document.querySelector('#adminLoginModal .modal-content').classList.add('fade-in-up');
-    }, 100);
-}
-
-// التعامل مع دخول المدير
-function handleAdminLogin() {
-    const password = document.getElementById('adminPassword').value;
-    const adminLoginError = document.getElementById('adminLoginError');
-    
-    // كلمة مرور المدير: 85208520
-    if (password === '85208520') {
-        // حفظ حالة الدخول
-        localStorage.setItem('adminLoggedIn', 'true');
-        localStorage.setItem('adminLoginTime', new Date().getTime());
-        
-        // تأثير نجاح
-        document.getElementById('adminLoginBtn').classList.add('copied');
-        document.getElementById('adminLoginBtn').innerHTML = '<i class="fas fa-check me-2"></i>تم الدخول';
-        
-        setTimeout(() => {
-            // إغلاق النافذة
-            const adminLoginModal = bootstrap.Modal.getInstance(document.getElementById('adminLoginModal'));
-            adminLoginModal.hide();
-            
-            // الانتقال إلى واجهة الإدارة
-            window.location.href = 'admin.html';
-        }, 500);
-    } else {
-        // عرض خطأ
-        adminLoginError.classList.remove('d-none');
-        document.getElementById('adminPassword').focus();
-        
-        // اهتزاز الحقل
-        document.getElementById('adminPassword').classList.add('shake');
-        setTimeout(() => {
-            document.getElementById('adminPassword').classList.remove('shake');
-        }, 500);
-    }
 }
 
 // نسخ النص إلى الحافظة
