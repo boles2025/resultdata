@@ -22,8 +22,6 @@
     <!-- خلفية متحركة -->
     <div class="background-animation"></div>
 
-    <!-- شريط التنقل -->
-    
     <!-- النموذج الرئيسي -->
     <div class="container mt-5">
         <!-- شعار -->
@@ -43,7 +41,7 @@
 
         <!-- بطاقة البحث -->
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-12 col-lg-10">
                 <div class="glass-card fade-in-up" style="animation-delay: 0.3s;">
                     <div class="card-header glass-header">
                         <h5 class="card-title mb-0">
@@ -75,7 +73,6 @@
                             </div>
                         </form>
                         
-                        <!-- رابط الدخول للإدارة -->
                         
                     </div>
                 </div>
@@ -84,7 +81,7 @@
 
         <!-- نتائج البحث -->
         <div class="row justify-content-center mt-5" id="resultsSection" style="display: none;">
-            <div class="col-md-10 col-lg-8">
+            <div class="col-12 col-lg-10">
                 <div class="glass-card fade-in-up">
                     <div class="card-header glass-header">
                         <h5 class="card-title mb-0">
@@ -136,7 +133,7 @@
                                 </div>
                                 <div class="data-value">
                                     <div class="d-flex align-items-center justify-content-between w-100">
-                                        <span id="studentPassword" class="text-value">-</span>
+                                        <span id="studentPassword" class="text-value" dir="ltr">-</span>
                                         <button class="btn copy-btn-single" data-target="studentPassword" data-type="كلمة المرور">
                                             <i class="fas fa-copy me-1"></i>نسخ
                                         </button>
@@ -145,7 +142,13 @@
                             </div>
                         </div>
 
-                        <!-- أزرار الإجراءات -->
+                        <!-- تنبيه -->
+                        <div class="alert glass-card mt-4" style="background: rgba(247, 37, 133, 0.15); border: 1px solid rgba(247, 37, 133, 0.2); border-radius: 12px; padding: 14px 18px; text-align: center;">
+                            <i class="fas fa-exclamation-circle" style="color: #f72585; margin-left: 8px;"></i>
+                            <span style="font-size: 0.95rem; font-weight: 600; color: #fff;">
+                                برجاء أخذ اسم المستخدم وكلمة المرور نسخ من الزر الخاص بالنسخ بجوارهما ولا تكتبه باليد
+                            </span>
+                        </div>
                         
 <!-- رابط النتيجة -->
                         <div class="text-center mt-4">
@@ -156,19 +159,6 @@
                                 للدخول إلى موقع النتيجة اضغط هنا
                             </a>
                         </div>
-<div class="row mt-4">
-                            <div class="col-md-6 mb-3">
-                                <button class="btn glass-btn w-100" id="copyAllBtn">
-                                    <i class="fas fa-copy me-2"></i>نسخ جميع البيانات
-                                </button>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <button class="btn glass-btn glass-btn-outline w-100" id="saveAsImageBtn">
-                                    <i class="fas fa-camera me-2"></i>حفظ البيانات كصورة
-                                </button>
-                            </div>
-                        </div>
-
                         
                     </div>
                     <div class="card-footer bg-transparent border-top border-light border-opacity-10">
@@ -182,7 +172,7 @@
 
         <!-- رسالة عدم العثور -->
         <div class="row justify-content-center mt-5" id="notFoundSection" style="display: none;">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-12 col-lg-10">
                 <div class="glass-card border-danger border-opacity-50">
                     <div class="card-header glass-header bg-danger bg-opacity-25">
                         <h5 class="card-title mb-0">
@@ -203,9 +193,6 @@
             </div>
         </div>
     </div>
-
-    <!-- نافذة الدخول للإدارة -->
-    
 
     <!-- تذييل الصفحة -->
     <footer class="footer mt-5">
